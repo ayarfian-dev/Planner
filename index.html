@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wedding Planner Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fdf1ea;--card:#fff;--ink:#2c3550;--navy:#1d3450;--mut:#6b7090;--teal:#2f6f73;--coral:#f26d5f;--line:#e4dbe6;--track:#eadfe2;--soft:#f8ece6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141b2b;--card:#1d2740;--ink:#e8e6ee;--navy:#f3e9e4;--mut:#9aa0bd;--teal:#5cb5b0;--coral:#f58a7e;--line:#323e5c;--track:#2c3753;--soft:#19233a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141b2b;--card:#1d2740;--ink:#e8e6ee;--navy:#f3e9e4;--mut:#9aa0bd;--teal:#5cb5b0;--coral:#f58a7e;--line:#323e5c;--track:#2c3753;--soft:#19233a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 Lato,system-ui,sans-serif;padding-bottom:84px}
+main{max-width:640px;margin:0 auto;padding:18px 16px}
+h2{font:700 1.15rem Lato,sans-serif;color:var(--navy);margin:22px 0 10px}
+.hero{text-align:center;padding:22px 8px 8px}
+.hero .nm{font:2.6rem/1.15 "Great Vibes",cursive;color:var(--navy)}
+.hero .big{font:700 4.2rem/1 Lato,sans-serif;color:var(--coral);margin-top:6px}
+.hero .lb{color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.st b{display:block;font-size:1.25rem;color:var(--navy)}.st span{font-size:.82rem;color:var(--mut)}
+.ring{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.ring i{width:58px;height:58px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font:700 .95rem Lato;font-style:normal;color:var(--teal)}
+.row{display:flex;align-items:center;gap:12px}
+.row.sp{justify-content:space-between}
+label{display:block;font-size:.82rem;color:var(--mut)}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:3px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
+.f{display:grid;gap:8px;margin-top:10px}
+.f.two{grid-template-columns:1fr 1fr}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--teal);color:#fff;border:0;border-radius:999px;padding:10px 20px;font-weight:700}
+.btn.o{background:none;color:var(--teal);border:1.5px solid var(--teal)}
+.x{background:none;border:0;color:var(--mut);font-size:1.2rem;padding:2px 8px}
+.chip{border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:3px 12px;font-size:.8rem}
+.chip.ok{background:var(--teal);border-color:var(--teal);color:#fff}.chip.no{background:var(--coral);border-color:var(--coral);color:#fff}
+.t{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+.t:last-child{border:0}
+.t .c{width:24px;height:24px;border-radius:50%;border:2px solid var(--mut);background:none;flex:none;color:#fff;font-size:.8rem;line-height:1}
+.t.d .c{background:var(--teal);border-color:var(--teal)}
+.t.d .tx{text-decoration:line-through;color:var(--mut)}
+.t small{display:block;color:var(--mut);font-size:.8rem}
+.t small.late{color:var(--coral);font-weight:700}
+.bar{height:8px;border-radius:8px;background:var(--track);overflow:hidden;margin-top:6px}.bar u{display:block;height:100%;background:var(--coral)}
+.mut{color:var(--mut);font-size:.85rem}.empty{text-align:center;color:var(--mut);padding:18px 0}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));z-index:5}
+nav button{flex:1;background:none;border:0;color:var(--mut);font-size:.72rem;padding:6px 0}
+nav button span{display:block;font-size:1.25rem}nav button.on{color:var(--coral);font-weight:700}
+@media print{nav,.noprint{display:none!important}body{background:#fff;color:#000}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav id="nav"></nav>
+<script>
+var K="rn-planner-v1",S,tab="home";
+var T=[["a1","Tentukan tanggal dan gedung",365],["a2","Tetapkan total anggaran",365],["a3","Booking MUA dan fotografer",270],["a4","Susun daftar tamu awal",270],["a5","Pilih katering dan dekorasi",180],["a6","Pesan busana pengantin",180],["a7","Urus berkas KUA atau catatan sipil",120],["a8","Cetak dan sebar undangan, siapkan souvenir",90],["a9","Booking akomodasi keluarga",90],["a10","Sesi foto pre-wedding",60],["a11","Fitting busana pengantin",30],["a12","Konfirmasi semua vendor",30],["a13","Konfirmasi kehadiran tamu",14],["a14","Siapkan cincin, amplop, dan perlengkapan",7],["a15","Gladi resik",3]];
+var TABS=[["home","🏠","Beranda"],["tasks","✅","Checklist"],["money","💰","Anggaran"],["guest","👥","Tamu"],["vend","🤝","Vendor"]];
+function load(){var r;try{r=JSON.parse(localStorage.getItem(K))}catch(e){}S=Object.assign({p:"",w:"",tgl:"",budget:0,done:{},custom:[],items:[],guests:[],vendors:[]},r||{})}
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function rp(n){return "Rp "+(Number(n)||0).toLocaleString("id-ID")}
+function val(id){var e=document.getElementById(id);return e?e.value.trim():""}
+function day(s){return new Date(s+"T00:00:00")}
+function fd(d){return d.toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"})}
+function left(){if(!S.tgl)return null;var n=new Date();n.setHours(0,0,0,0);return Math.round((day(S.tgl)-n)/864e5)}
+function tasks(){var l=T.map(function(t){return{id:t[0],t:t[1],due:S.tgl?new Date(day(S.tgl)-t[2]*864e5):null}});S.custom.forEach(function(c){l.push({id:c.id,t:c.t,due:c.due?day(c.due):null,cu:1})});return l}
+function prog(){var l=tasks(),d=l.filter(function(t){return S.done[t.id]}).length;return{d:d,n:l.length,p:l.length?Math.round(d*100/l.length):0}}
+function sum(a,k){return a.reduce(function(s,x){return s+(Number(x[k])||0)},0)}
+function head(){return '<div class="hero"><div class="nm">'+esc(S.p||"Mempelai Pria")+" &amp; "+esc(S.w||"Mempelai Wanita")+"</div></div>"}
+function home(){
+ var L=left(),P=prog(),est=sum(S.items,"est"),paid=sum(S.items,"paid"),hd=0,pend=0;
+ S.guests.forEach(function(g){if(g.s=="Hadir")hd+=+g.pax||0;else if(g.s=="Belum")pend+=+g.pax||0});
+ var h=head();
+ h+=S.tgl?'<div class="hero" style="padding-top:0"><div class="big">'+(L>=0?L:0)+'</div><div class="lb">'+(L>0?"hari lagi, "+fd(day(S.tgl)):L==0?"Hari ini hari bahagia kalian":"Selamat menempuh hidup baru")+"</div></div>":'<p class="empty">Isi nama dan tanggal di bawah untuk mulai menghitung mundur.</p>';
+ h+='<div class="card" style="margin-top:18px"><div class="row"><div class="ring" style="background:conic-gradient(var(--teal) '+P.p+'%,var(--track) 0)"><i>'+P.p+'%</i></div><div><b style="color:var(--navy)">Persiapan berjalan</b><div class="mut">'+P.d+" dari "+P.n+" tugas selesai</div></div></div></div>";
+ h+='<div class="grid"><div class="card st"><b>'+rp(S.budget-est)+'</b><span>Sisa anggaran</span></div><div class="card st"><b>'+rp(est-paid)+'</b><span>Sisa tagihan vendor</span></div><div class="card st"><b>'+hd+'</b><span>Orang konfirmasi hadir</span></div><div class="card st"><b>'+pend+'</b><span>Orang belum konfirmasi</span></div></div>';
+ var nx=tasks().filter(function(t){return!S.done[t.id]}).sort(function(a,b){return(a.due||1e15)-(b.due||1e15)}).slice(0,3);
+ h+="<h2>Tugas berikutnya</h2><div class='card'>"+(nx.length?nx.map(trow).join(""):'<div class="empty">Semua tugas selesai 🎉</div>')+"</div>";
+ h+='<h2>Data pasangan</h2><div class="card"><div class="f two"><label>Mempelai pria<input id="sp" value="'+esc(S.p)+'" maxlength="40"></label><label>Mempelai wanita<input id="sw" value="'+esc(S.w)+'" maxlength="40"></label></div><div class="f"><label>Tanggal pernikahan<input id="st" type="date" value="'+esc(S.tgl)+'"></label></div></div>';
+ h+='<h2>Cadangan data</h2><div class="card"><p class="mut">Data tersimpan di browser ini. Salin cadangan dan simpan di catatan atau WhatsApp, lalu tempel di sini untuk memulihkan di HP lain.</p><div class="f"><textarea id="bk" rows="3" placeholder="Tempel cadangan di sini untuk memulihkan"></textarea><div class="row"><button class="btn" data-a="copy">Salin cadangan</button><button class="btn o" data-a="restore">Pulihkan</button><button class="btn o noprint" data-a="print">Cetak</button></div><div class="mut" id="msg"></div></div></div>';
+ return h}
+function trow(t){var d=!!S.done[t.id],ds="",late=0;if(t.due){late=!d&&t.due<new Date(new Date().setHours(0,0,0,0));ds="Target "+fd(t.due)+(late?" (terlambat)":"")}
+ return '<div class="t'+(d?" d":"")+'"><button class="c" data-a="tg" data-id="'+t.id+'" aria-label="Tandai selesai">'+(d?"✓":"")+'</button><div class="tx" style="flex:1">'+esc(t.t)+(ds?"<small"+(late?' class="late"':"")+">"+ds+"</small>":"")+"</div>"+(t.cu?'<button class="x" data-a="dc" data-id="'+t.id+'" aria-label="Hapus">×</button>':"")+"</div>"}
+function tasksV(){
+ var l=tasks();return head()+'<h2>Checklist persiapan</h2>'+(S.tgl?"":'<p class="mut" style="margin-bottom:8px">Isi tanggal pernikahan di Beranda agar target tiap tugas terisi otomatis.</p>')+'<div class="card">'+l.map(trow).join("")+'</div><h2>Tambah tugas sendiri</h2><div class="card"><div class="f two"><label>Nama tugas<input id="ct"></label><label>Target (opsional)<input id="cd" type="date"></label></div><div class="f"><button class="btn" data-a="addc">Tambah tugas</button></div></div>'}
+function moneyV(){
+ var est=sum(S.items,"est"),paid=sum(S.items,"paid"),pc=S.budget?Math.min(100,Math.round(est*100/S.budget)):0;
+ var h=head()+'<h2>Anggaran</h2><div class="card"><label>Total anggaran (Rp)<input id="bud" type="number" inputmode="numeric" value="'+(S.budget||"")+'"></label><div class="row sp" style="margin-top:12px"><span class="mut">Terencana '+rp(est)+"</span><b style='color:var(--coral)'>"+pc+'%</b></div><div class="bar"><u style="width:'+pc+'%"></u></div><div class="row sp mut" style="margin-top:8px"><span>Sudah dibayar '+rp(paid)+"</span><span>Sisa dana "+rp(S.budget-est)+"</span></div></div>";
+ h+='<div class="card">'+(S.items.length?S.items.map(function(x,i){return '<div class="t"><div style="flex:1"><b>'+esc(x.n)+'</b><small>Estimasi '+rp(x.est)+" · Dibayar "+rp(x.paid)+" · Sisa "+rp(x.est-x.paid)+'</small></div><button class="x" data-a="del" data-l="items" data-i="'+i+'" aria-label="Hapus">×</button></div>'}).join(""):'<div class="empty">Belum ada pos biaya. Tambahkan gedung, katering, atau rias.</div>')+"</div>";
+ return h+'<h2>Tambah pos biaya</h2><div class="card"><div class="f"><label>Nama pos<input id="in"></label></div><div class="f two"><label>Estimasi (Rp)<input id="ie" type="number" inputmode="numeric"></label><label>Sudah dibayar (Rp)<input id="ip" type="number" inputmode="numeric"></label></div><div class="f"><button class="btn" data-a="addi">Simpan pos biaya</button></div></div>'}
+function nextS(s,o){return o[(o.indexOf(s)+1)%o.length]}
+function guestV(){
+ var c={Hadir:0,Belum:0,Tidak:0};S.guests.forEach(function(g){c[g.s]+=+g.pax||0});
+ var h=head()+'<h2>Daftar tamu</h2><div class="grid"><div class="card st"><b>'+c.Hadir+'</b><span>Hadir</span></div><div class="card st"><b>'+c.Belum+'</b><span>Belum konfirmasi</span></div></div><div class="card">'+(S.guests.length?S.guests.map(function(g,i){return '<div class="t"><div style="flex:1"><b>'+esc(g.n)+'</b><small>'+esc(g.g)+" · "+g.pax+' orang</small></div><button class="chip '+(g.s=="Hadir"?"ok":g.s=="Tidak"?"no":"")+'" data-a="gs" data-i="'+i+'">'+g.s+'</button><button class="x" data-a="del" data-l="guests" data-i="'+i+'" aria-label="Hapus">×</button></div>'}).join(""):'<div class="empty">Belum ada tamu. Tambahkan tamu pertama di bawah.</div>')+"</div>";
+ return h+'<h2>Tambah tamu</h2><div class="card"><div class="f two"><label>Nama tamu<input id="gn"></label><label>Jumlah orang<input id="gp" type="number" inputmode="numeric" value="1" min="1"></label></div><div class="f"><label>Kelompok<select id="gg"><option>Keluarga pria</option><option>Keluarga wanita</option><option>Teman</option><option>Rekan kerja</option></select></label><button class="btn" data-a="addg">Simpan tamu</button></div></div><p class="mut">Ketuk status tamu untuk mengganti: Belum, Hadir, Tidak.</p>'}
+function vendV(){
+ var h=head()+'<h2>Vendor</h2><div class="card">'+(S.vendors.length?S.vendors.map(function(v,i){return '<div class="t"><div style="flex:1"><b>'+esc(v.n)+'</b><small>'+esc(v.k)+(v.c?" · "+esc(v.c):"")+(v.h?" · "+rp(v.h):"")+'</small></div><button class="chip '+(v.s=="Lunas"?"ok":"")+'" data-a="vs" data-i="'+i+'">'+v.s+'</button><button class="x" data-a="del" data-l="vendors" data-i="'+i+'" aria-label="Hapus">×</button></div>'}).join(""):'<div class="empty">Belum ada vendor. Catat MUA, fotografer, dan katering di sini.</div>')+"</div>";
+ return h+'<h2>Tambah vendor</h2><div class="card"><div class="f two"><label>Nama vendor<input id="vn"></label><label>Jenis<input id="vk" placeholder="MUA, katering, dll"></label></div><div class="f two"><label>Kontak<input id="vc" placeholder="No. WhatsApp"></label><label>Harga (Rp)<input id="vh" type="number" inputmode="numeric"></label></div><div class="f"><button class="btn" data-a="addv">Simpan vendor</button></div></div><p class="mut">Ketuk status vendor untuk mengganti: Survey, DP, Lunas.</p>'}
+function render(){
+ var V={home:home,tasks:tasksV,money:moneyV,guest:guestV,vend:vendV};
+ document.getElementById("app").innerHTML=V[tab]();
+ document.getElementById("nav").innerHTML=TABS.map(function(t){return '<button class="'+(t[0]==tab?"on":"")+'" data-tab="'+t[0]+'"><span>'+t[1]+"</span>"+t[2]+"</button>"}).join("")}
+function uid(){return "c"+Date.now().toString(36)}
+document.addEventListener("click",function(e){
+ var b=e.target.closest("button");if(!b)return;
+ if(b.dataset.tab){tab=b.dataset.tab;render();window.scrollTo(0,0);return}
+ var a=b.dataset.a,i=+b.dataset.i;if(!a)return;
+ if(a=="tg"){S.done[b.dataset.id]=!S.done[b.dataset.id]}
+ else if(a=="dc"){S.custom=S.custom.filter(function(c){return c.id!=b.dataset.id})}
+ else if(a=="addc"){if(!val("ct"))return;S.custom.push({id:uid(),t:val("ct"),due:val("cd")})}
+ else if(a=="addi"){if(!val("in"))return;S.items.push({n:val("in"),est:+val("ie")||0,paid:+val("ip")||0})}
+ else if(a=="addg"){if(!val("gn"))return;S.guests.push({n:val("gn"),pax:Math.max(1,+val("gp")||1),g:val("gg"),s:"Belum"})}
+ else if(a=="addv"){if(!val("vn"))return;S.vendors.push({n:val("vn"),k:val("vk"),c:val("vc"),h:+val("vh")||0,s:"Survey"})}
+ else if(a=="del"){S[b.dataset.l].splice(i,1)}
+ else if(a=="gs"){S.guests[i].s=nextS(S.guests[i].s,["Belum","Hadir","Tidak"])}
+ else if(a=="vs"){S.vendors[i].s=nextS(S.vendors[i].s,["Survey","DP","Lunas"])}
+ else if(a=="print"){window.print();return}
+ else if(a=="copy"){var t=JSON.stringify(S),m=document.getElementById("msg"),ta=document.getElementById("bk");ta.value=t;ta.select();
+  var ok=function(){m.textContent="Cadangan disalin."},no=function(){m.textContent="Teks cadangan sudah dipilih, salin manual."};
+  try{navigator.clipboard.writeText(t).then(ok,no)}catch(x){no()}return}
+ else if(a=="restore"){var m2=document.getElementById("msg");try{var d=JSON.parse(val("bk"));if(typeof d!="object"||!d||!Array.isArray(d.items))throw 0;S=Object.assign({p:"",w:"",tgl:"",budget:0,done:{},custom:[],items:[],guests:[],vendors:[]},d);save();render()}catch(x){m2.textContent="Cadangan tidak valid. Pastikan tempel seluruh teks."}return}
+ save();render()});
+document.addEventListener("change",function(e){
+ var m={sp:"p",sw:"w",st:"tgl"},id=e.target.id;
+ if(m[id]){S[m[id]]=e.target.value.trim();save();render()}
+ else if(id=="bud"){S.budget=+e.target.value||0;save();render()}});
+load();render();
+</script>
+</body>
+</html>
