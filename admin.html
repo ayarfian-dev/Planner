@@ -5,7 +5,7 @@
 <div class="c"><b>Buat kode baru</b><input id="nm" placeholder="Nama pembeli"><input id="wa" placeholder="No. WhatsApp"><button onclick="mk()">Buat kode</button><div id="out"></div></div>
 <div id="ls"></div>
 <script>
-var API="https://planner-api.GANTI.workers.dev",LINK="https://planner.rencananikahku.online/",$=function(i){return document.getElementById(i)};
+var API="https://https://planner-api.ayarfian.workers.dev/",LINK="https://planner.rencananikahku.online/",$=function(i){return document.getElementById(i)};
 $("tk").value=sessionStorage.getItem("at")||"";
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 async function ap(p,m,b){sessionStorage.setItem("at",$("tk").value);var r=await fetch(API+p,{method:m||"GET",headers:{Authorization:"Bearer "+$("tk").value,"Content-Type":"application/json"},body:b?JSON.stringify(b):undefined});if(!r.ok)throw 0;return r.json()}
