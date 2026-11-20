@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Planner</title>
+<style>body{font:15px/1.5 system-ui,sans-serif;max-width:680px;margin:0 auto;padding:16px;background:#fdf1ea;color:#2c3550}input{width:100%;padding:9px;margin:3px 0 8px;border:1px solid #ccc;border-radius:8px;font:inherit}button{padding:7px 14px;border:0;border-radius:99px;background:#2f6f73;color:#fff;font:inherit;cursor:pointer;margin:2px}button.o{background:#f26d5f}.c{background:#fff;border-radius:12px;padding:12px;margin:10px 0}code{font-size:1.05rem;font-weight:700}small{color:#6b7090}</style></head><body>
+<h2>Admin Planner</h2>
+<div class="c"><label>Token admin<input id="tk" type="password"></label><button onclick="ld()">Masuk dan muat daftar</button></div>
+<div class="c"><b>Buat kode baru</b><input id="nm" placeholder="Nama pembeli"><input id="wa" placeholder="No. WhatsApp"><button onclick="mk()">Buat kode</button><div id="out"></div></div>
+<div id="ls"></div>
+<script>
+var API="https://planner-api.GANTI.workers.dev",LINK="https://planner.rencananikahku.online/",$=function(i){return document.getElementById(i)};
+$("tk").value=sessionStorage.getItem("at")||"";
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+async function ap(p,m,b){sessionStorage.setItem("at",$("tk").value);var r=await fetch(API+p,{method:m||"GET",headers:{Authorization:"Bearer "+$("tk").value,"Content-Type":"application/json"},body:b?JSON.stringify(b):undefined});if(!r.ok)throw 0;return r.json()}
+function wa(c,n){return "Terima kasih, pembayaran sudah kami terima 🙏\nLink Wedding Planner: "+LINK+"\nKode akses: "+c+"\nKode berlaku untuk "+n+" perangkat (kamu dan pasangan). Setelah masuk, isi nama pasangan dan tanggal nikah di menu Beranda, lalu simpan cadangan data."}
+function cp(t){navigator.clipboard.writeText(t).then(function(){alert("Pesan disalin")},function(){prompt("Salin pesan:",t)})}
+async function mk(){try{var r=await ap("/api/admin/codes","POST",{name:$("nm").value,wa:$("wa").value,max:2});$("out").innerHTML="<p>Kode: <code>"+r.code+"</code></p><button onclick='cp(wa(\""+r.code+"\",2))'>Salin pesan WA</button>";ld()}catch(e){alert("Gagal. Cek token dan alamat API.")}}
+async function ld(){try{var l=await ap("/api/admin/codes");$("ls").innerHTML=l.map(function(x){return '<div class="c"><code>'+esc(x.code)+"</code> <small>"+esc(x.name)+" · "+x.n+"/"+x.max_dev+" perangkat · "+x.status+"</small><br><button onclick='cp(wa(\""+x.code+"\","+x.max_dev+"))'>Salin pesan WA</button><button class='o' onclick='st(\""+x.code+"\",\""+(x.status=="aktif"?"dicabut":"aktif")+"\")'>"+(x.status=="aktif"?"Cabut":"Aktifkan")+"</button><button class='o' onclick='rs(\""+x.code+"\")'>Reset perangkat</button></div>"}).join("")||"<p>Belum ada kode.</p>"}catch(e){alert("Gagal memuat. Cek token dan alamat API.")}}
+async function st(c,s){await ap("/api/admin/status","POST",{code:c,status:s});ld()}
+async function rs(c){if(confirm("Reset daftar perangkat untuk "+c+"?")){await ap("/api/admin/reset","POST",{code:c});ld()}}
+</script></body></html>

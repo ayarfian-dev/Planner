@@ -49,17 +49,32 @@ nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);b
 nav button{flex:1;background:none;border:0;color:var(--mut);font-size:.72rem;padding:6px 0}
 nav button span{display:block;font-size:1.25rem}nav button.on{color:var(--coral);font-weight:700}
 @media print{nav,.noprint{display:none!important}body{background:#fff;color:#000}.card{break-inside:avoid}}
+#sync{position:fixed;top:calc(6px + env(safe-area-inset-top,0px));right:10px;font-size:.7rem;color:var(--mut);z-index:6}@media print{#sync{display:none}}
 </style>
 </head>
 <body>
 <main id="app"></main>
 <nav id="nav"></nav>
+<div id="sync"></div>
 <script>
 var K="rn-planner-v1",S,tab="home";
 var T=[["a1","Tentukan tanggal dan gedung",365],["a2","Tetapkan total anggaran",365],["a3","Booking MUA dan fotografer",270],["a4","Susun daftar tamu awal",270],["a5","Pilih katering dan dekorasi",180],["a6","Pesan busana pengantin",180],["a7","Urus berkas KUA atau catatan sipil",120],["a8","Cetak dan sebar undangan, siapkan souvenir",90],["a9","Booking akomodasi keluarga",90],["a10","Sesi foto pre-wedding",60],["a11","Fitting busana pengantin",30],["a12","Konfirmasi semua vendor",30],["a13","Konfirmasi kehadiran tamu",14],["a14","Siapkan cincin, amplop, dan perlengkapan",7],["a15","Gladi resik",3]];
 var TABS=[["home","🏠","Beranda"],["tasks","✅","Checklist"],["money","💰","Anggaran"],["guest","👥","Tamu"],["vend","🤝","Vendor"]];
 function load(){var r;try{r=JSON.parse(localStorage.getItem(K))}catch(e){}S=Object.assign({p:"",w:"",tgl:"",budget:0,done:{},custom:[],items:[],guests:[],vendors:[]},r||{})}
-function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+var API="https://planner-api.ayarfian.workers.dev",DV,TK="",VER=0,tm;
+function lg(k,v){try{if(v===undefined)return localStorage.getItem(k);v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
+function norm(d){return Object.assign({p:"",w:"",tgl:"",budget:0,done:{},custom:[],items:[],guests:[],vendors:[]},d||{})}
+function setV(v){VER=v;lg("rn-ver",String(v))}
+function badge(t){var e=document.getElementById("sync");if(e)e.textContent=t}
+async function api(p,m,b,t){var r=await fetch(API+p,{method:m||"GET",headers:{"Content-Type":"application/json",Authorization:"Bearer "+(t||TK)},body:b?JSON.stringify(b):undefined});var j={};try{j=await r.json()}catch(e){}return{s:r.status,j:j}}
+function save(){lg(K,JSON.stringify(S));if(TK)push()}
+function push(){clearTimeout(tm);tm=setTimeout(async function(){badge("Menyimpan...");try{var r=await api("/api/plan","PUT",{data:S,ver:VER});if(r.s==200){setV(r.j.ver);badge("Tersimpan")}else if(r.s==409){S=norm(r.j.data);setV(r.j.ver);lg(K,JSON.stringify(S));render();badge("Diperbarui dari perangkat lain")}else if(r.s==401||r.s==403){lg("rn-tok",null);TK="";gate("Sesi berakhir. Masukkan kode lagi.")}else badge("Gagal menyimpan")}catch(e){badge("Offline, tersimpan di perangkat")}},700)}
+function gate(m){document.getElementById("nav").style.display="none";document.getElementById("app").innerHTML='<div class="hero"><div class="nm">Wedding Planner</div></div><div class="card"><label>Kode akses<input id="kd" placeholder="RN-XXXXX-XXXXX" autocapitalize="characters"></label><div class="f"><button class="btn" data-a="login">Masuk</button><div class="mut" id="msg">'+(m||"Masukkan kode yang dikirim lewat WhatsApp.")+'</div></div></div>'}
+async function login(){var c=val("kd").toUpperCase(),m=document.getElementById("msg");if(!c)return;m.textContent="Memeriksa...";try{var r=await api("/api/activate","POST",{code:c,dev:DV},"x");if(r.s==200){TK=r.j.token;lg("rn-tok",TK);S=norm(r.j.data);setV(r.j.ver);lg(K,JSON.stringify(S));start()}else m.textContent=r.j.error||"Kode tidak valid."}catch(e){m.textContent="Tidak bisa terhubung. Cek internet."}}
+function start(){document.getElementById("nav").style.display="";render();badge("Tersimpan")}
+async function boot(){DV=lg("rn-dev");if(!DV){DV="d"+Date.now().toString(36)+Math.random().toString(36).slice(2,8);lg("rn-dev",DV)}
+ load();TK=lg("rn-tok")||"";VER=+lg("rn-ver")||0;if(!TK){gate();return}
+ render();badge("Memuat...");try{var r=await api("/api/plan");if(r.s==200){S=norm(r.j.data);setV(r.j.ver);lg(K,JSON.stringify(S));render();badge("Tersimpan")}else if(r.s==401||r.s==403){lg("rn-tok",null);TK="";gate("Sesi berakhir. Masukkan kode lagi.")}else badge("Gagal memuat")}catch(e){badge("Offline, memakai data di perangkat")}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function rp(n){return "Rp "+(Number(n)||0).toLocaleString("id-ID")}
 function val(id){var e=document.getElementById(id);return e?e.value.trim():""}
@@ -117,6 +132,7 @@ document.addEventListener("click",function(e){
  else if(a=="del"){S[b.dataset.l].splice(i,1)}
  else if(a=="gs"){S.guests[i].s=nextS(S.guests[i].s,["Belum","Hadir","Tidak"])}
  else if(a=="vs"){S.vendors[i].s=nextS(S.vendors[i].s,["Survey","DP","Lunas"])}
+ else if(a=="login"){login();return}
  else if(a=="print"){window.print();return}
  else if(a=="copy"){var t=JSON.stringify(S),m=document.getElementById("msg"),ta=document.getElementById("bk");ta.value=t;ta.select();
   var ok=function(){m.textContent="Cadangan disalin."},no=function(){m.textContent="Teks cadangan sudah dipilih, salin manual."};
@@ -127,7 +143,7 @@ document.addEventListener("change",function(e){
  var m={sp:"p",sw:"w",st:"tgl"},id=e.target.id;
  if(m[id]){S[m[id]]=e.target.value.trim();save();render()}
  else if(id=="bud"){S.budget=+e.target.value||0;save();render()}});
-load();render();
+boot();
 </script>
 </body>
 </html>
